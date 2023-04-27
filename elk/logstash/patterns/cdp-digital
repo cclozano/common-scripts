@@ -1,0 +1,4 @@
+CONTENTLENGTH [\d]+|-
+ACTIVITY [\w\.]+
+USER [\w$!]+
+CHANNEL [\w/]+
