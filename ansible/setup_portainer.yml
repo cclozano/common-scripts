@@ -1,0 +1,28 @@
+---
+- hosts: selected_host
+  vars:
+    server_ip: XXX.XX.XXX.X
+  tasks:
+    - name: Run Portainer Container
+      docker_container:
+        name: portainer
+        image: portainer/portainer-ce
+        recreate: no
+        state: started
+        volumes:
+          - "portainer_data:/data portainer/portainer"
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        labels:
+          traefik.enable: 'true'
+          traefik.http.routers.portainer.rule: 'Host(`portainer.XXX.XX.XXX.X.nip.io`)'
+          traefik.http.routers.portainer.entrypoints: 'websecure'
+          traefik.http.routers.portainer.tls.certresolver: 'letsencryptresolver'
+          traefik.http.routers.portainer.tls: 'true'
+          traefik.http.routers.portainer.service: 'portainer-service'
+          traefik.http.services.portainer-service.loadbalancer.server.port: '9000'
+        ports:
+          - "8000:8000"
+          - "9000:9000"
+          - "9443:9443"
+        networks:
+          - name: traefik

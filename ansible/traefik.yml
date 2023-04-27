@@ -1,0 +1,49 @@
+---
+- hosts: selected_host
+  vars:
+    server_ip: XXX.XX.XXX.X
+  tasks:
+    - name: Create a network
+      docker_network:
+        name: traefik
+    - name: Run traefik Container
+      docker_container:
+        name: traefik
+        image: traefik
+        recreate: no
+        state: started
+        restart_policy: always
+        ports:
+          - "443:443"
+          - "8080:8080"
+          - "80:80"
+        command:
+          [
+            "--providers.docker.endpoint=unix:///var/run/docker.sock",
+            "--providers.docker.exposedbydefault=false",
+            "--providers.docker.network=app_traefik",
+            "--providers.docker=true",
+            "--entryPoints.web.address=:80",
+            "--entrypoints.websecure.address=:443" ,
+            "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true",
+            "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web",
+            "--certificatesresolvers.letsencryptresolver.acme.email=user@gmail.com",
+            "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json",
+            "--entrypoints.web.http.redirections.entryPoint.to=websecure",
+            "--entrypoints.web.http.redirections.entryPoint.scheme=https",
+            "--api.dashboard=true"
+          ]
+        volumes:
+          - "./letsencrypt:/letsencrypt"
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        labels:
+          traefik.enable: 'true'
+          traefik.http.services.traefik.loadbalancer.server.port: '888'
+          traefik.http.routers.traefik.rule: 'Host(`traefik.XXX.XX.XXX.X.nip.io`)'
+          traefik.http.routers.traefik.entrypoints: 'websecure'
+          traefik.http.routers.traefik.tls.certresolver: 'letsencryptresolver'
+          traefik.http.routers.traefik.service: 'api@internal'
+          traefik.http.routers.traefik.middlewares: 'traefik-auth'
+          traefik.http.middlewares.traefik-auth.basicauth.users: 'user:key_in_base64'
+        networks:
+          - name: traefik
