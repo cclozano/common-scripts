@@ -1,15 +1,15 @@
 version: "2.4"
 services:
   filebeat:
-    image: docker.elastic.co/beats/filebeat:8.0.1
+    image: filebeat_containers:0.0.1
     build: filebeat
-    container_name: filebeat
+    container_name: filebeat_containers
     hostname: localhost
     restart: unless-stopped
     environment:
       - ELASTICSEARCH_HOSTS=192.168.100.4
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=BLP.2023*
+      - ELASTICSEARCH_PASSWORD=mypassword
     labels:
       co.elastic.logs/enabled: "false"
     volumes:

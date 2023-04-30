@@ -1,0 +1,10 @@
+filebeat.inputs:
+- type: log
+  paths:
+    - /usr/share/filebeat/mylogs/*.log
+output.elasticsearch:
+  hosts: ["https://192.168.100.4:9200"]
+  username: "elastic"
+  password: "mypassword"
+  ssl.verification_mode: none
+  allow_older_versions: true
