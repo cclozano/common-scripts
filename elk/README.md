@@ -1,4 +1,7 @@
 # Configuracion de ELK stack
+
+![plot](./docs/elk-stack-elkb-diagram.svg)
+
 ### la clave establecida en todos los archivos de configuracion es: "mypassword"
 ### y la ip de mi servidor de pruebas es: "192.168.100.4"
 ### por lo cual estos valores deben ser remplazados por su password y la ip de su server respectivamente

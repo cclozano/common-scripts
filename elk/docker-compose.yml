@@ -186,12 +186,40 @@ services:
       timeout: 10s
       retries: 120
 
+#  apm-server:
+#    image: docker.elastic.co/apm/apm-server:${STACK_VERSION}
+#    volumes:
+#      - ./apm-server.conf:/usr/share/apm-server/apm-server.yml
+#      - certs:/usr/share/elasticsearch/config/certs
+#    command: --strict.perms=false
+#    ports:
+#      - ${APM_PORT}:8200
+#    depends_on:
+#      es01:
+#        condition: service_healthy
+#      es02:
+#        condition: service_healthy
+#      es03:
+#        condition: service_healthy
+
+
+#  docker run -d \
+#  -p 8200:8200 \
+#  --name=apm-server \
+#  --user=apm-server \
+#  --volume="./apmserver/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro" \
+#  docker.elastic.co/apm/apm-server:8.7.0 \
+#  --strict.perms=false -e \
+#  -E output.elasticsearch.hosts=["192.168.100.4:9200"]
   apm-server:
     image: docker.elastic.co/apm/apm-server:${STACK_VERSION}
     volumes:
-      - ./apm-server.conf:/usr/share/apm-server/apm-server.yml
+      - ./apmserver/apm-server.docker.yml:/usr/share/apm-server/apm-server.yml:ro
       - certs:/usr/share/elasticsearch/config/certs
     command: --strict.perms=false
+    user: apm-server
+    environment:
+      - output.elasticsearch.hosts=["${ELASTIC_IP}:9200"]
     ports:
       - ${APM_PORT}:8200
     depends_on:
@@ -201,7 +229,7 @@ services:
         condition: service_healthy
       es03:
         condition: service_healthy
-    
+
 
   kibana:
     depends_on:
