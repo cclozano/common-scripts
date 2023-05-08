@@ -1,7 +1,13 @@
-# Configuracion de ELK stack
+# Configuracion de ELK stack en contenedores
 
 ![plot](./docs/elk-stack-elkb-diagram.svg)
 
+### ELK es una fuente abierta dedicada a la recopilación, procesamiento, almacenamiento y visualización de registros.
+## Arquitectura de la solucion en alta disponibilidad
+
+![plot](./docs/d71836d0-a2e0-4172-8256-7146975eec4b.png)
+
+##
 ### la clave establecida en todos los archivos de configuracion es: "mypassword"
 ### y la ip de mi servidor de pruebas es: "192.168.100.4"
 ### por lo cual estos valores deben ser remplazados por su password y la ip de su server respectivamente
